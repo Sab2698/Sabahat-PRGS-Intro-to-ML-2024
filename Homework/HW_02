@@ -25,9 +25,13 @@ For this assignment, you will practice downloadings, cleaning, and analyzing dat
 
 __1. Import the NRI data. Ensure that the [FIPS code](https://en.wikipedia.org/wiki/Federal_Information_Processing_Standard_state_code) variable ('STCOFIPS') is correctly identified as a string / character variable. Otherwise, the leading zeros will be removed.__
 
-```
+```{python}
+
+
 # your code here
-```
+```import pandas as pd
+
+
 
 __2. Subset the NRI data to include only the 5-digit state/county FIPS code and all colums ending with '\_AFREQ' and '\_RISKR'. Each of these columns represents a different hazard type.__
 
