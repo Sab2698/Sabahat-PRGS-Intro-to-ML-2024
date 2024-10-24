@@ -1,0 +1,235 @@
+---
+title: "Homework 2"
+format:
+    html:
+        embed-resources: true
+---
+
+__Due Date:__ 2022-10-16 at 8:30 AM PT
+---
+
+
+__Name:__ Sabahat
+
+
+
+For this assignment, you will practice downloadings, cleaning, and analyzing data from the [National Risk Index (NRI)](https://hazards.fema.gov/nri/) and the [CDC Social Vulnerability Index (SVI)](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html).
+
+## Preparation
+
+1. Create a 'data' folder in the root directory of your repository.
+1. Inside the 'data' folder, create a 'raw' folder.
+1. Add and commit a '.gitignore' file to the root directory of this repository that excludes all contents of the 'data' folder.
+1. Download the county-level NRI and SVI data for the entire United States. Place the data in the 'data/raw' folder.
+1. In the repository README, provide a brief (1-2 sentence) description of each file in the 'data' folder and a link to the original source of the data.
+
+## Task 1 - NRI Data Cleaning
+
+__1. Import the NRI data. Ensure that the [FIPS code](https://en.wikipedia.org/wiki/Federal_Information_Processing_Standard_state_code) variable ('STCOFIPS') is correctly identified as a string / character variable. Otherwise, the leading zeros will be removed.__
+
+
+# your code here
+```{python}
+import pandas as pd
+import os
+os.getcwd()
+# Import and identify 'STCOFIPS' as string
+nri_data = pd.read_csv('C:/Users/sabahat/Desktop/ML-Folder/Sabahat-PRGS-Intro-to-ML-2024/Homework/Homework_02/data/raw/NRI_Table_Counties.csv', dtype={'STCOFIPS': str})
+
+# Check the first few rows to confirm
+print(nri_data.head())
+```
+
+
+
+__2. Subset the NRI data to include only the 5-digit state/county FIPS code and all colums ending with '\_AFREQ' and '\_RISKR'. Each of these columns represents a different hazard type.__
+
+```{python}
+# Subsetting the NRI data to include 'STCOFIPS' and columns ending with '_AFREQ' and '_RISKR'
+subset_columns = ['STCOFIPS']  # Start with 'STCOFIPS'
+subset_columns.extend([col for col in nri_data.columns if col.endswith('_AFREQ') or col.endswith('_RISKR')])
+# Create the subset of the data
+nri_subset = nri_data[subset_columns]
+# Check the first few rows to confirm
+print(nri_subset.head())
+
+```
+
+__3. Create a table / dataframe that, for each hazard type, shows the number of missing values in the '\_AFREQ' and '\_RISKR' columns.__
+```{python}
+# your code here
+# Select only columns ending with '_AFREQ' and '_RISKR' from the subset
+afreq_riskr_columns = [col for col in nri_subset.columns if col.endswith('_AFREQ') or col.endswith('_RISKR')]
+# Create a dataframe to store the number of missing values for each column
+missing_values = nri_subset[afreq_riskr_columns].isnull().sum()
+# Convert the result into a more readable dataframe
+missing_values_df = pd.DataFrame(missing_values, columns=['Missing_Values'])
+# Display the missing values table
+print(missing_values_df)
+
+```
+
+__4. Create a new column in the original data table indicating whether or not 'AVLN_AFREQ' is missing or observed. Show the cross-tabulation of the 'AVLN_AFREQ' missingness and 'AVLN_RISKR' columns (including missing values). What do you observe?__
+# your code here
+
+```{python}
+# Create a new column 'AVLN_AFREQ_missing' indicating if 'AVLN_AFREQ' is missing
+nri_data['AVLN_AFREQ_missing'] = nri_data['AVLN_AFREQ'].isnull()
+# Create a cross-tabulation of 'AVLN_AFREQ_missing' and 'AVLN_RISKR', including missing values
+cross_tab = pd.crosstab(nri_data['AVLN_AFREQ_missing'], nri_data['AVLN_RISKR'], dropna=False)
+# Display the cross-tabulation
+print(cross_tab)
+
+```
+
+__5. Assuming that a risk that is "not applicable" to a county has an annualized frequency of 0, impute the relevant missing values in the '\_AFREQ' columns with 0.__
+```{python}
+
+# your code here
+# Identify '_AFREQ' columns
+afreq_columns = [col for col in nri_subset.columns if col.endswith('_AFREQ')]
+
+# Impute missing values in the '_AFREQ' columns with 0, where the corresponding '_RISKR' is "Not Applicable"
+for afreq_col in afreq_columns:
+    # Find the corresponding '_RISKR' column
+    riskr_col = afreq_col.replace('_AFREQ', '_RISKR')
+    # Impute missing '_AFREQ' values with 0 where '_RISKR' is "Not Applicable"
+    nri_data.loc[nri_data[riskr_col] == 'Not Applicable', afreq_col] = 0
+
+# Verify that the imputation worked by checking the data
+print(nri_data[afreq_columns].head())
+
+```
+
+
+## Task 2 - SVI Data Cleaning
+
+__1. Import the SVI data. Ensure that the FIPS code is correctly identified as a string / character variable. Otherwise, the leading zeros will be removed.__
+
+
+# your code here
+```{python}
+
+import pandas as pd
+import os
+os.getcwd()
+# Define the file path to the SVI data
+svi_file_path = 'C:/Users/sabahat/Desktop/ML-Folder/Sabahat-PRGS-Intro-to-ML-2024/Homework/Homework_02/data/raw/SVI_2022_US_county.csv'
+# Import the SVI data, ensuring 'FIPS' is read as a string
+svi_data = pd.read_csv(svi_file_path, dtype={'FIPS': str})
+# Check the first few rows to confirm
+print(svi_data.head())
+
+```
+
+__1. Subset the SVI data to include only the following columns:__
+`ST, STATE, ST_ABBR, STCNTY, COUNTY, FIPS, LOCATION, AREA_SQMI, E_TOTPOP, EP_POV150, EP_UNEMP, EP_HBURD, EP_NOHSDP, EP_UNINSUR, EP_AGE65, EP_AGE17, EP_DISABL, EP_SNGPNT, EP_LIMENG, EP_MINRTY, EP_MUNIT, EP_MOBILE, EP_CROWD, EP_NOVEH, EP_GROUPQ, EP_NOINT, EP_AFAM, EP_HISP, EP_ASIAN, EP_AIAN, EP_NHPI, EP_TWOMORE, EP_OTHERRACE`
+
+```{python}
+# Define the columns to include in the subset
+svi_columns = [
+    'ST', 'STATE', 'ST_ABBR', 'STCNTY', 'COUNTY', 'FIPS', 'LOCATION', 'AREA_SQMI', 'E_TOTPOP', 
+    'EP_POV150', 'EP_UNEMP', 'EP_HBURD', 'EP_NOHSDP', 'EP_UNINSUR', 'EP_AGE65', 'EP_AGE17', 
+    'EP_DISABL', 'EP_SNGPNT', 'EP_LIMENG', 'EP_MINRTY', 'EP_MUNIT', 'EP_MOBILE', 'EP_CROWD', 
+    'EP_NOVEH', 'EP_GROUPQ', 'EP_NOINT', 'EP_AFAM', 'EP_HISP', 'EP_ASIAN', 'EP_AIAN', 'EP_NHPI', 
+    'EP_TWOMORE', 'EP_OTHERRACE'
+]
+
+# Subset the SVI data to include only these columns
+svi_subset = svi_data[svi_columns]
+
+```
+
+__2. Create a table / dataframe that shows the number of missing values in each column.
+(Hint: if you wrote a function for Task 1, you can reuse it here.)__
+
+```{python}
+# Calculate the number of missing values for each column
+missing_values_svi = svi_subset.isnull().sum()
+
+# Convert the result into a more readable dataframe
+missing_values_svi_df = pd.DataFrame(missing_values_svi, columns=['Missing_Values'])
+
+# Display the table of missing values
+print(missing_values_svi_df)
+```
+
+## Task 3 - Data Merging
+__1. Identify any FIPS codes that are present in the NRI data but not in the SVI data and vice versa. Describe any discrepancies and possible causes? What to these discrepancies, if any, mean for interpreting results based on the merged dataset moving forward?__
+
+# your code here
+```{python}
+# Extract the FIPS codes from both datasets
+nri_fips = set(nri_data['STCOFIPS'])  # From NRI
+svi_fips = set(svi_subset['FIPS'])    # From SVI
+
+# Find FIPS codes present in NRI but not in SVI
+fips_in_nri_not_svi = nri_fips - svi_fips
+
+# Find FIPS codes present in SVI but not in NRI
+fips_in_svi_not_nri = svi_fips - nri_fips
+
+# Print the results
+print(f"FIPS codes in NRI but not in SVI: {len(fips_in_nri_not_svi)}")
+print(fips_in_nri_not_svi)
+
+print(f"FIPS codes in SVI but not in NRI: {len(fips_in_svi_not_nri)}")
+print(fips_in_svi_not_nri)
+
+```
+___Differences in FIPS codes between the NRI and SVI datasets may arise due to their distinct geographic coverage. The NRI dataset includes U.S. territories such as American Samoa, Guam, the Northern Mariana Islands, Puerto Rico, and the U.S. Virgin Islands, which might not be present in the SVI dataset. Consequently, some counties could appear in one dataset but not in the other. These discrepancies might affect the interpretation of results from the merged dataset, potentially introducing bias or limiting the generalizability of the findings. Moreover, when aggregating data at the state or regional level, missing counties could distort the outcomes. For example, if a highly vulnerable or high-risk county is absent from one dataset, it could result in under- or over-estimations of risk or vulnerability at broader scale
+
+__2. Merge the NRI and SVI data on the FIPS code. Use an outer join to keep all counties in the final dataset.__
+
+# your code here
+```{python}
+merged_data = pd.merge(nri_subset, svi_subset, left_on='STCOFIPS', right_on='FIPS', how='outer')
+
+# Check the first few rows to confirm the merge
+print(merged_data.head())
+
+```
+
+
+__3. Create a table / dataframe that shows the number of missing values in each column of the merged dataset.__
+
+```{python}
+# Calculate the number of missing values for each column in the merged dataset
+missing_values_merged = merged_data.isnull().sum()
+
+# Convert the result into a more readable dataframe
+missing_values_merged_df = pd.DataFrame(missing_values_merged, columns=['Missing_Values'])
+
+# Display the table of missing values
+print(missing_values_merged_df)
+
+```
+
+## Task 4 - Data Analysis
+
+__1. For each numerical variable in the merged dataset, plot a histogram showing the distribution of values.
+(Hint: write a function to make the histogram for a single variable, then use a loop or apply function to make the histograms for all numerical variables.)__
+
+
+# your code here
+```{python}
+import matplotlib.pyplot as plt
+# Function to plot a histogram for a given column
+def plot_histogram(column_name):
+    plt.figure(figsize=(8, 6))
+    merged_data[column_name].dropna().hist(bins=30, edgecolor='black')
+    plt.title(f'Distribution of {column_name}')
+    plt.xlabel(column_name)
+    plt.ylabel('Frequency')
+    plt.grid(False)
+    plt.show()
+
+# Identify numerical columns in the merged dataset
+numerical_columns = merged_data.select_dtypes(include=['float64', 'int64']).columns
+
+# Display the numerical columns (optional, to verify)
+print(numerical_columns)
+
+# Loop through each numerical column and plot the histogram
+for col in numerical_columns:
+    plot_histogram(col)
