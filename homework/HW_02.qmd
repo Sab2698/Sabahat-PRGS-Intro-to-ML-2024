@@ -34,7 +34,7 @@ import pandas as pd
 import os
 os.getcwd()
 # Import and identify 'STCOFIPS' as string
-nri_data = pd.read_csv('C:/Users/sabahat/Desktop/ML-Folder/Sabahat-PRGS-Intro-to-ML-2024/Homework/Homework_02/data/raw/NRI_Table_Counties.csv', dtype={'STCOFIPS': str})
+nri_data = pd.read_csv('C:/Users/sabahat/Desktop/ML-Folder/Sabahat-PRGS-Intro-to-ML-2024/data/raw/NRI_Table_Counties.csv', dtype={'STCOFIPS': str})
 
 # Check the first few rows to confirm
 print(nri_data.head())
@@ -114,9 +114,11 @@ import pandas as pd
 import os
 os.getcwd()
 # Define the file path to the SVI data
-svi_file_path = 'C:/Users/sabahat/Desktop/ML-Folder/Sabahat-PRGS-Intro-to-ML-2024/Homework/Homework_02/data/raw/SVI_2022_US_county.csv'
+
+svi_data = pd.read_csv('C:/Users/sabahat/Desktop/ML-Folder/Sabahat-PRGS-Intro-to-ML-2024/data/raw/SVI_2022_US_county.csv', dtype={'FIPS': str})
+
 # Import the SVI data, ensuring 'FIPS' is read as a string
-svi_data = pd.read_csv(svi_file_path, dtype={'FIPS': str})
+
 # Check the first few rows to confirm
 print(svi_data.head())
 
