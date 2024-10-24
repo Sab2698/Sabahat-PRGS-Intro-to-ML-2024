@@ -5,10 +5,6 @@ format:
         embed-resources: true
 ---
 
-__Due Date:__ 2022-10-16 at 8:30 AM PT
----
-
-
 __Name:__ Sabahat
 
 
