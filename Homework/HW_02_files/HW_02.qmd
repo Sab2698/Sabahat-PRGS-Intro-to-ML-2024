@@ -1,5 +1,5 @@
 ---
-title: "homework 2"
+title: "Homework 2"
 format: html
 ---
 
@@ -13,7 +13,13 @@ __Name:__ Sabahat
 
 For this assignment, you will practice downloadings, cleaning, and analyzing data from the [National Risk Index (NRI)](https://hazards.fema.gov/nri/) and the [CDC Social Vulnerability Index (SVI)](https://www.atsdr.cdc.gov/placeandhealth/svi/index.html).
 
+## Preparation
 
+1. Create a 'data' folder in the root directory of your repository.
+1. Inside the 'data' folder, create a 'raw' folder.
+1. Add and commit a '.gitignore' file to the root directory of this repository that excludes all contents of the 'data' folder.
+1. Download the county-level NRI and SVI data for the entire United States. Place the data in the 'data/raw' folder.
+1. In the repository README, provide a brief (1-2 sentence) description of each file in the 'data' folder and a link to the original source of the data.
 
 ## Task 1 - NRI Data Cleaning
 
