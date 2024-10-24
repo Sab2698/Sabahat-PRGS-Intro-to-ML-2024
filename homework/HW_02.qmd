@@ -216,6 +216,7 @@ __1. For each numerical variable in the merged dataset, plot a histogram showing
 # your code here
 ```{python}
 import matplotlib.pyplot as plt
+
 # Function to plot a histogram for a given column
 def plot_histogram(column_name):
     plt.figure(figsize=(8, 6))
@@ -235,3 +236,6 @@ print(numerical_columns)
 # Loop through each numerical column and plot the histogram
 for col in numerical_columns:
     plot_histogram(col)
+
+```
+
