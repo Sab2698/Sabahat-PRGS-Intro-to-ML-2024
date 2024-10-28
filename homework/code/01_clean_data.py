@@ -28,3 +28,13 @@ merged_data = pd.merge(nri_subset, svi_subset, left_on='STCOFIPS', right_on='FIP
 
 # Check the first few rows to confirm the merge
 print(merged_data.head())
+import os
+import pandas as pd
+
+# Assuming merged_data is your DataFrame
+# Create the 'processed' directory if it doesn't exist
+processed_dir = 'data/processed'
+os.makedirs(processed_dir, exist_ok=True)
+
+# Save the merged dataset
+merged_data.to_csv(f'{processed_dir}/merged_dataset.csv', index=False)
