@@ -1,16 +1,20 @@
 
-import pandas as pd
 import os
-os.getcwd()
+import pandas as pd
+
 # Import and identify 'STCOFIPS' as string
 nri_data = pd.read_csv('C:/Users/sabahat/Desktop/ML-Folder/Sabahat-PRGS-Intro-to-ML-2024/data/raw/NRI_Table_Counties.csv', dtype={'STCOFIPS': str})
+
 # Subsetting the NRI data to include 'STCOFIPS' and columns ending with '_AFREQ' and '_RISKR'
 subset_columns = ['STCOFIPS']  # Start with 'STCOFIPS'
 subset_columns.extend([col for col in nri_data.columns if col.endswith('_AFREQ') or col.endswith('_RISKR')])
+
 # Create the subset of the data
 nri_subset = nri_data[subset_columns]
+
 # Check the first few rows to confirm
 print(nri_subset.head())
+
 # Define the file path to the SVI data
 svi_data = pd.read_csv('C:/Users/sabahat/Desktop/ML-Folder/Sabahat-PRGS-Intro-to-ML-2024/data/raw/SVI_2022_US_county.csv', dtype={'FIPS': str})
 svi_columns = [
@@ -23,13 +27,12 @@ svi_columns = [
 
 # Subset the SVI data to include only these columns
 svi_subset = svi_data[svi_columns]
+
  #Merge the NRI and SVI data on the FIPS code
 merged_data = pd.merge(nri_subset, svi_subset, left_on='STCOFIPS', right_on='FIPS', how='outer')
 
 # Check the first few rows to confirm the merge
 print(merged_data.head())
-import os
-import pandas as pd
 
 # Assuming merged_data is your DataFrame
 # Create the 'processed' directory if it doesn't exist
