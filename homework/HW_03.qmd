@@ -5,30 +5,225 @@ format:
         embed-resources: true
 ---
 
+## **Due Date:** 2022-10-30 at 8:30 AM PT
 
-__Due Date:__ 2022-10-30 at 8:30 AM PT
----
-
-
-__Name:__ Sabahat
-
+**Name:** Sabahat
 
 ## Preparation
 
-1. Create a 'code' folder in the root directory of your repository.
-1. Inside the 'code' folder, create a file '01_clean_data.\<your_extension_here\>'.
-Your extension should be the one you use for your programming language of choice (e.g., '.R' for R, '.py' for Python, '.jl' for Julia).
-1. Copy any code from HW_02 you need to subset and merge the NRI and SVI datasets into the '01_clean_data' file.
-1. Add a 'processed' directory to the 'data' folder.
-1. Add a line at the end of the file that saves the merged dataset to 'data/processed' directory.
-1. Run the '01_clean_data' file to ensure that the merged dataset runs and creates the proper file.
-1. Add and commit the '01_clean_data' file to the repository.
+1.  Create a 'code' folder in the root directory of your repository.
+2.  Inside the 'code' folder, create a file '01_clean_data.\<your_extension_here\>'. Your extension should be the one you use for your programming language of choice (e.g., '.R' for R, '.py' for Python, '.jl' for Julia).
+3.  Copy any code from HW_02 you need to subset and merge the NRI and SVI datasets into the '01_clean_data' file.
+4.  Add a 'processed' directory to the 'data' folder.
+5.  Add a line at the end of the file that saves the merged dataset to 'data/processed' directory.
+6.  Run the '01_clean_data' file to ensure that the merged dataset runs and creates the proper file.
+7.  Add and commit the '01_clean_data' file to the repository.
+Answer: Did all steps
 
+# `Importing all the extensions` {style="grey"}
 
+```{python}
+import pandas as pd
+import os
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+import numpy as np
+from joblib import Parallel, delayed
+from sklearn.model_selection import KFold
+```
 
 ## Homework - Principal Component Analysis
 
-The CDC Social Vulnerability Index (SVI) takes multiple differen population-level inputs (e.g., % of the population living in poverty, % of the population without health insurance) to identify particularly vulnerable counties.
-While the CDC SVI scores rely on adding up the percentiles of various characteristics, there are alternative indexes (e.g., [University of South Carolina SoVI index](https://sc.edu/study/colleges_schools/artsandsciences/centers_and_institutes/hvri/data_and_resources/sovi/index.php)) that use methods like PCA.
-Here, we are going to use the CDC SVI data to create an alternative index based on PCA.
+## a. Subset the merged dataset to only include the variables above and look at the pattern of missing data. Are missing observations scattered throughout the data or are entire rows or columns missing?
 
+#a. `Subset the Merged Dataset` {style="grey"}
+
+```{python}
+import pandas as pd
+svi_variables = [
+    'EP_POV150', 'EP_UNEMP', 'EP_HBURD', 'EP_NOHSDP', 'EP_UNINSUR',
+    'EP_AGE65', 'EP_AGE17', 'EP_DISABL', 'EP_SNGPNT', 'EP_LIMENG',
+    'EP_MINRTY', 'EP_MUNIT', 'EP_MOBILE', 'EP_CROWD', 'EP_NOVEH',
+    'EP_GROUPQ', 'EP_NOINT'
+]
+# Loading the data with defined columns
+# Load the data with defined columns
+file_path = 'C:/Users/sabahat/Desktop/ML-Folder/Sabahat-PRGS-Intro-to-ML-2024/homework/code/data/processed/merged_dataset.csv'
+svi_data = pd.read_csv(file_path, usecols=svi_variables)
+
+# Check the first few rows to confirm
+print(svi_data.head())
+# Checking missing data pattern
+missing_data_summary = svi_data.isnull().sum()
+print(missing_data_summary)
+
+```
+
+##`Answer: The output shows that each columns have 96 missing values, the data could be misssing for same rows. It appeared that the missing observations scattered in some rows.`
+
+##b. PCA cannot handle missing values by default.There are several options for handling missing data generally, including imputation, removing rows with missing data, or removing columns with missing data. Deal with the missing data in a way that makes sense for the pattern of missing data and the goals of the analysis. Explain why you made this decision. _Note: How you handle this is specific to the missing data pattern and the goals of the analysis. For example, when entire rows or columns are missing, imputation may not be appropriate and dropping those rows or columns is usually the best option Conversely, if you have a general missingness pattern where missing observations are scattered throughout the data, imputation is likely the best option
+
+
+# `Checking for rows where all values are missing and treatment afterwards`
+```{python}
+fully_missing_rows = svi_data.isnull().all(axis=1)
+
+# Count the number of fully missing rows
+num_fully_missing_rows = fully_missing_rows.sum()
+print(f"Number of fully missing rows: {num_fully_missing_rows}")
+
+# Display fully missing rows
+missing_rows_data = svi_data[fully_missing_rows]
+print(missing_rows_data)
+
+# Remove fully missing rows
+cleaned_data = svi_data.dropna(how='all')
+
+# Verify the removal
+print(f"Data shape after removal: {cleaned_data.shape}")
+
+# Check if there are any missing values in the dataset
+has_missing = cleaned_data.isnull().any().any()
+print(f"Are there any missing values? {has_missing}")
+
+# Count missing values in each column
+missing_summary = cleaned_data.isnull().sum()
+print("Missing values per column:\n", missing_summary)
+# After cleaning, ensuring the cleaned data is assigned to the correct variable
+cleaned_data = svi_data.dropna(how='all')  # Example cleaning step
+
+```
+##`Answer:  There were 96 rows showing no data. All these 96 rows have been removed. The data is showing zero missing values accross all the columns, so there is no need to apply imputation techniques.`
+
+##a. After dealing with the missing data, perform PCA on the SVI variables.
+```{python}
+# Standardizing the data
+scaler = StandardScaler()
+svi_data_standardized = scaler.fit_transform(cleaned_data)
+# Performing PCA
+pca = PCA()
+pca.fit(svi_data_standardized)
+
+# Getting the explained variance
+explained_variance = pca.explained_variance_ratio_
+
+# Plotting the explained variance
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, len(explained_variance) + 1), explained_variance, marker='o', linestyle='--')
+plt.title('Explained Variance by Principal Components')
+plt.xlabel('Principal Component')
+plt.ylabel('Explained Variance Ratio')
+plt.show()
+
+# Print explained variance for each component
+print("Explained variance ratio for each component:")
+for i, var_ratio in enumerate(explained_variance, start=1):
+    print(f"PC{i}: {var_ratio:.4f}")
+
+# Extract loadings
+loadings = pca.components_.T
+```
+
+##1. Plot the eigenvectors or loadings associated of the first three principal components.Make sure that the axis labels correspond to the variable names and not the indices of the variables.
+```{python}
+# Plot loadings for the first three principal components
+plt.figure(figsize=(14, 8))
+for i in range(3):
+    plt.subplot(1, 3, i + 1)
+    plt.barh(svi_variables, loadings[:, i])
+    plt.title(f'PC{i+1} Loadings')
+    plt.xlabel('Loading Value')
+    plt.ylabel('SVI Variables')
+
+plt.tight_layout()
+plt.show()
+```
+
+## How would you interpret the first three prinicpal components?_Note: you can find the documentation for the SVI variables [here].
+
+## `Answer: The PC1 highlights the economic and social vulnerability. It suggests that all the varaibles move in the same direction and contributing positively to economic and social vulnerability. The only two varibales i.e., the group of people aged 65 and people living in hosing in large structures contributed negatively which might indiccate higher economic stability. The PC2 depicts vulnerabilities associated with age and connectivity. It suggest that five variables including Age65+, prevalence of disability, mobile homes, and lack of internet positively contribute to economic and social stress. The variables such as housing in large Units and limited english proficiency seem to have negative contribution and suggest more stable environment. The PC3 highlights educational and linguistic challenges. It shows that no high school diploma, no insurance, youth, limited english proficiency are positively contributed to educational and linguistic challenges. The variables such as lower unemployment, reduced housing cost burden, large housing structures all improve the educational and liguistic challenges.`
+
+##1. There are several different ways to determine the number of principal components to retain.One common method is to retain principal components that explain a certain percentage of the variance in the data.a. How many principal components are needed to explain 80% of the variance in the data? a. How many principal components are needed to explain 90% of the variance in the data?
+```{python}
+# Calculate cumulative explained variance
+cumulative_variance = np.cumsum(pca.explained_variance_ratio_)
+
+# Determine number of components for 80% and 90% variance
+num_components_80 = np.argmax(cumulative_variance >= 0.80) + 1
+num_components_90 = np.argmax(cumulative_variance >= 0.90) + 1
+
+print(f"Number of components to explain 80% of variance: {num_components_80}")
+print(f"Number of components to explain 90% of variance: {num_components_90}")
+```
+## `Answer: Number of components to explain 80% of variance: 7. Number of components to explain 90% of variance: 11`
+
+##1. An alternative approach is to plot the eigenvalues of the principal components and retain the components that are above the "elbow" in the plot. In other words the eigenvalues that are substantially larger than the rest. a. Create a [scree plot](https://en.wikipedia.org/wiki/Scree_plot) of the eigenvalues of the principal components.
+# `Plot the scree plot`
+```{python}
+eigenvalues = pca.explained_variance_
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, len(eigenvalues) + 1), eigenvalues, marker='o', linestyle='--')
+plt.title('Scree Plot')
+plt.xlabel('Principal Component')
+plt.ylabel('Eigenvalue')
+plt.grid(True)
+plt.show()
+```
+##a. How many principal components should be retained based on the scree plot?
+
+#`Answer:Based on this principal component graph, it seems that from point PC4 to PC6 the slope of the curve changed significantly and this may reffered to as the elbow. After that eigen values started to tapered off slowly indicating diminishing returns in terms of variance. So we can retain 6 principal componenets.`
+
+##1. Cross-validation is another method to determine the number of principal components to retain.This process requires some linear algebra that is beyond the scope of this course.As such, I have written example [code](https://github.com/gabehassler/PRGS-Intro-to-ML-2024/blob/main/examples/pca_cross_validation.jl) in Julia that demonstrates how to perform cross-validation.
+This procedure is a simplified versionof an approach explained in this [blog post](https://alexhwilliams.info/itsneuronalblog/2018/02/26/crossval/). For the purposes of this assignment, the `pca_cv_error` function is a black box that returns the cross-validation error for a given number of principal components. _Note: If you use a different programming language, you can use ChatGPT to translate the code to your language of choice._ a. Compute the cross-validation error for 1 to 17 principal components. If this process is parallelizable, parallelize the code. If setting a random number seed would make this work more reproducible, set a random number seed.
+
+```{python}
+# Function to approximate the data matrix X using the first k principal components
+def pca_approx(X, k):
+    pca = PCA(n_components=k)
+    X_transformed = pca.fit_transform(X)
+    X_approx = pca.inverse_transform(X_transformed)
+    return X_approx
+# Function to compute the cross-validated error of approximating X using the first k principal components
+def pca_cv_error(X, k, n_folds=20, random_seed=42):
+    kf = KFold(n_splits=n_folds, shuffle=True, random_state=random_seed)
+    errors = []
+
+    for train_index, test_index in kf.split(X):
+        X_train, X_test = X[train_index], X[test_index]
+
+        # Compute column means
+        column_means = np.mean(X_train, axis=0)
+
+        # Replace test set with column means
+        X_cv = X_test.copy()
+        X_cv[:] = column_means
+
+        # Approximate X_cv using the first k principal components
+        X_hat = pca_approx(X_cv, k)
+
+        # Compute the error of the approximation for the test set
+        error = np.sum((X_hat - X_test) ** 2)
+        errors.append(error)
+
+    # Return the average error
+    return np.mean(errors) / X.size
+    # Set random seed for reproducibility
+random_seed = 42
+
+# Compute the cross-validated error for k = 1 to 17
+errors = [pca_cv_error(svi_data_standardized, k, random_seed=random_seed) for k in range(1, 18)]
+
+# Determine the optimal number of principal components
+optimal_k = np.argmin(errors) + 1
+print(f"Optimal number of principal components: {optimal_k}")
+#Plotting Cross-Validation Error
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, 18), errors, marker='o', linestyle='--')
+plt.title('Cross-Validation Error vs. Number of Principal Components')
+plt.xlabel('Number of Principal Components')
+plt.ylabel('Cross-Validation Error')
+plt.xticks(range(1, 18))
+plt.grid(True)
+plt.show()
+```
