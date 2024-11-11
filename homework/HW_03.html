@@ -3116,10 +3116,8 @@ vertical-align: -.125em;
 <li>Run the ‘01_clean_data’ file to ensure that the merged dataset runs and creates the proper file.</li>
 <li>Add and commit the ‘01_clean_data’ file to the repository. Answer: Did all steps</li>
 </ol>
-</section>
-<section id="importing-all-the-extensions" class="level1" style="grey">
-<h1 style="grey"><code>Importing all the extensions</code></h1>
-<div id="156e61b8" class="cell" data-execution_count="1">
+<p>#<code>Importing all the extensions.</code></p>
+<div id="8cbfc307" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
@@ -3129,13 +3127,14 @@ vertical-align: -.125em;
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> joblib <span class="im">import</span> Parallel, delayed</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> KFold</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
 <section id="homework---principal-component-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="homework---principal-component-analysis">Homework - Principal Component Analysis</h2>
 </section>
 <section id="a.-subset-the-merged-dataset-to-only-include-the-variables-above-and-look-at-the-pattern-of-missing-data.-are-missing-observations-scattered-throughout-the-data-or-are-entire-rows-or-columns-missing" class="level2">
 <h2 class="anchored" data-anchor-id="a.-subset-the-merged-dataset-to-only-include-the-variables-above-and-look-at-the-pattern-of-missing-data.-are-missing-observations-scattered-throughout-the-data-or-are-entire-rows-or-columns-missing">a. Subset the merged dataset to only include the variables above and look at the pattern of missing data. Are missing observations scattered throughout the data or are entire rows or columns missing?</h2>
-<p>#a. <code>Subset the Merged Dataset</code> {style=“grey”}</p>
-<div id="6d9f1afc" class="cell" data-execution_count="2">
+<p>#a.<code>Subset the Merged Dataset.</code></p>
+<div id="b6482c77" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>svi_variables <span class="op">=</span> [</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;EP_POV150&#39;</span>, <span class="st">&#39;EP_UNEMP&#39;</span>, <span class="st">&#39;EP_HBURD&#39;</span>, <span class="st">&#39;EP_NOHSDP&#39;</span>, <span class="st">&#39;EP_UNINSUR&#39;</span>,</span>
@@ -3194,13 +3193,10 @@ EP_NOINT      96
 dtype: int64</code></pre>
 </div>
 </div>
-<p>##<code>Answer: The output shows that each columns have 96 missing values, the data could be misssing for same rows. It appeared that the missing observations scattered in some rows.</code></p>
+<p>#<code>Answer: The output shows that each columns have 96 missing values, the data could be misssing for same rows. It appeared that the missing observations scattered in some rows.</code></p>
 <p>##b. PCA cannot handle missing values by default.There are several options for handling missing data generally, including imputation, removing rows with missing data, or removing columns with missing data. Deal with the missing data in a way that makes sense for the pattern of missing data and the goals of the analysis. Explain why you made this decision. _Note: How you handle this is specific to the missing data pattern and the goals of the analysis. For example, when entire rows or columns are missing, imputation may not be appropriate and dropping those rows or columns is usually the best option Conversely, if you have a general missingness pattern where missing observations are scattered throughout the data, imputation is likely the best option</p>
-</section>
-</section>
-<section id="checking-for-rows-where-all-values-are-missing-and-treatment-afterwards" class="level1">
-<h1><code>Checking for rows where all values are missing and treatment afterwards</code></h1>
-<div id="6037d95d" class="cell" data-execution_count="3">
+<p>#<code>Checking for rows where all values are missing and treatment afterwards.</code></p>
+<div id="a3272991" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fully_missing_rows <span class="op">=</span> svi_data.isnull().<span class="bu">all</span>(axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Count the number of fully missing rows</span></span>
@@ -3291,9 +3287,9 @@ EP_NOINT      0
 dtype: int64</code></pre>
 </div>
 </div>
-<p>##<code>Answer:  There were 96 rows showing no data. All these 96 rows have been removed. The data is showing zero missing values accross all the columns, so there is no need to apply imputation techniques.</code></p>
+<p>#<code>Answer:There were 96 rows showing no data. All these 96 rows have been removed. The data is showing zero missing values accross all the columns, so there is no need to apply imputation techniques.</code></p>
 <p>##a. After dealing with the missing data, perform PCA on the SVI variables.</p>
-<div id="124f669b" class="cell" data-execution_count="4">
+<div id="936ef74b" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardizing the data</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>svi_data_standardized <span class="op">=</span> scaler.fit_transform(cleaned_data)</span>
@@ -3348,7 +3344,7 @@ PC17: 0.0084</code></pre>
 </div>
 </div>
 <p>##1. Plot the eigenvectors or loadings associated of the first three principal components.Make sure that the axis labels correspond to the variable names and not the indices of the variables.</p>
-<div id="bcd50295" class="cell" data-execution_count="5">
+<div id="57420106" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot loadings for the first three principal components</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">8</span>))</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
@@ -3368,13 +3364,12 @@ PC17: 0.0084</code></pre>
 </div>
 </div>
 </div>
+</section>
 <section id="how-would-you-interpret-the-first-three-prinicpal-components_note-you-can-find-the-documentation-for-the-svi-variables-here." class="level2">
 <h2 class="anchored" data-anchor-id="how-would-you-interpret-the-first-three-prinicpal-components_note-you-can-find-the-documentation-for-the-svi-variables-here.">How would you interpret the first three prinicpal components?_Note: you can find the documentation for the SVI variables [here].</h2>
-</section>
-<section id="answer-the-pc1-highlights-the-economic-and-social-vulnerability.-it-suggests-that-all-the-varaibles-move-in-the-same-direction-and-contributing-positively-to-economic-and-social-vulnerability.-the-only-two-varibales-i.e.-the-group-of-people-aged-65-and-people-living-in-hosing-in-large-structures-contributed-negatively-which-might-indiccate-higher-economic-stability.-the-pc2-depicts-vulnerabilities-associated-with-age-and-connectivity.-it-suggest-that-five-variables-including-age65-prevalence-of-disability-mobile-homes-and-lack-of-internet-positively-contribute-to-economic-and-social-stress.-the-variables-such-as-housing-in-large-units-and-limited-english-proficiency-seem-to-have-negative-contribution-and-suggest-more-stable-environment.-the-pc3-highlights-educational-and-linguistic-challenges.-it-shows-that-no-high-school-diploma-no-insurance-youth-limited-english-proficiency-are-positively-contributed-to-educational-and-linguistic-challenges.-the-variables-such-as-lower-unemployment-reduced-housing-cost-burden-large-housing-structures-all-improve-the-educational-and-liguistic-challenges." class="level2">
-<h2 class="anchored" data-anchor-id="answer-the-pc1-highlights-the-economic-and-social-vulnerability.-it-suggests-that-all-the-varaibles-move-in-the-same-direction-and-contributing-positively-to-economic-and-social-vulnerability.-the-only-two-varibales-i.e.-the-group-of-people-aged-65-and-people-living-in-hosing-in-large-structures-contributed-negatively-which-might-indiccate-higher-economic-stability.-the-pc2-depicts-vulnerabilities-associated-with-age-and-connectivity.-it-suggest-that-five-variables-including-age65-prevalence-of-disability-mobile-homes-and-lack-of-internet-positively-contribute-to-economic-and-social-stress.-the-variables-such-as-housing-in-large-units-and-limited-english-proficiency-seem-to-have-negative-contribution-and-suggest-more-stable-environment.-the-pc3-highlights-educational-and-linguistic-challenges.-it-shows-that-no-high-school-diploma-no-insurance-youth-limited-english-proficiency-are-positively-contributed-to-educational-and-linguistic-challenges.-the-variables-such-as-lower-unemployment-reduced-housing-cost-burden-large-housing-structures-all-improve-the-educational-and-liguistic-challenges."><code>Answer: The PC1 highlights the economic and social vulnerability. It suggests that all the varaibles move in the same direction and contributing positively to economic and social vulnerability. The only two varibales i.e., the group of people aged 65 and people living in hosing in large structures contributed negatively which might indiccate higher economic stability. The PC2 depicts vulnerabilities associated with age and connectivity. It suggest that five variables including Age65+, prevalence of disability, mobile homes, and lack of internet positively contribute to economic and social stress. The variables such as housing in large Units and limited english proficiency seem to have negative contribution and suggest more stable environment. The PC3 highlights educational and linguistic challenges. It shows that no high school diploma, no insurance, youth, limited english proficiency are positively contributed to educational and linguistic challenges. The variables such as lower unemployment, reduced housing cost burden, large housing structures all improve the educational and liguistic challenges.</code></h2>
+<p>#<code>Answer:The PC1 highlights the economic and social vulnerability. It suggests that all the varaibles move in the same direction and contributing positively to economic and social vulnerability. The only two varibales i.e., the group of people aged 65 and people living in hosing in large structures contributed negatively which might indiccate higher economic stability. The PC2 depicts vulnerabilities associated with age and connectivity. It suggest that five variables including Age65+, prevalence of disability, mobile homes, and lack of internet positively contribute to economic and social stress. The variables such as housing in large Units and limited english proficiency seem to have negative contribution and suggest more stable environment. The PC3 highlights educational and linguistic challenges. It shows that no high school diploma, no insurance, youth, limited english proficiency are positively contributed to educational and linguistic challenges. The variables such as lower unemployment, reduced housing cost burden, large housing structures all improve the educational and liguistic challenges.</code></p>
 <p>##1. There are several different ways to determine the number of principal components to retain.One common method is to retain principal components that explain a certain percentage of the variance in the data.a. How many principal components are needed to explain 80% of the variance in the data? a. How many principal components are needed to explain 90% of the variance in the data?</p>
-<div id="21b385c1" class="cell" data-execution_count="6">
+<div id="6f9f91c0" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate cumulative explained variance</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>cumulative_variance <span class="op">=</span> np.cumsum(pca.explained_variance_ratio_)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -3389,11 +3384,9 @@ PC17: 0.0084</code></pre>
 Number of components to explain 90% of variance: 11</code></pre>
 </div>
 </div>
-</section>
-<section id="answer-number-of-components-to-explain-80-of-variance-7.-number-of-components-to-explain-90-of-variance-11" class="level2">
-<h2 class="anchored" data-anchor-id="answer-number-of-components-to-explain-80-of-variance-7.-number-of-components-to-explain-90-of-variance-11"><code>Answer: Number of components to explain 80% of variance: 7. Number of components to explain 90% of variance: 11</code></h2>
+<p>#<code>Answer:Number of components to explain 80% of variance: 7. Number of components to explain 90% of variance: 11.</code></p>
 <p>##1. An alternative approach is to plot the eigenvalues of the principal components and retain the components that are above the “elbow” in the plot. In other words the eigenvalues that are substantially larger than the rest. a. Create a <a href="https://en.wikipedia.org/wiki/Scree_plot">scree plot</a> of the eigenvalues of the principal components. # <code>Plot the scree plot</code></p>
-<div id="48406131" class="cell" data-execution_count="7">
+<div id="f81ed578" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>eigenvalues <span class="op">=</span> pca.explained_variance_</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(eigenvalues) <span class="op">+</span> <span class="dv">1</span>), eigenvalues, marker<span class="op">=</span><span class="st">&#39;o&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span>
@@ -3413,7 +3406,7 @@ Number of components to explain 90% of variance: 11</code></pre>
 <p>##a. How many principal components should be retained based on the scree plot?</p>
 <p>#<code>Answer:Based on this principal component graph, it seems that from point PC4 to PC6 the slope of the curve changed significantly and this may reffered to as the elbow. After that eigen values started to tapered off slowly indicating diminishing returns in terms of variance. So we can retain 6 principal componenets.</code></p>
 <p>##1. Cross-validation is another method to determine the number of principal components to retain.This process requires some linear algebra that is beyond the scope of this course.As such, I have written example <a href="https://github.com/gabehassler/PRGS-Intro-to-ML-2024/blob/main/examples/pca_cross_validation.jl">code</a> in Julia that demonstrates how to perform cross-validation. This procedure is a simplified versionof an approach explained in this <a href="https://alexhwilliams.info/itsneuronalblog/2018/02/26/crossval/">blog post</a>. For the purposes of this assignment, the <code>pca_cv_error</code> function is a black box that returns the cross-validation error for a given number of principal components. <em>Note: If you use a different programming language, you can use ChatGPT to translate the code to your language of choice.</em> a. Compute the cross-validation error for 1 to 17 principal components. If this process is parallelizable, parallelize the code. If setting a random number seed would make this work more reproducible, set a random number seed.</p>
-<div id="544904e4" class="cell" data-execution_count="8">
+<div id="bf772bea" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to approximate the data matrix X using the first k principal components</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> pca_approx(X, k):</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    pca <span class="op">=</span> PCA(n_components<span class="op">=</span>k)</span>
@@ -3473,7 +3466,6 @@ Number of components to explain 90% of variance: 11</code></pre>
 </div>
 </div>
 </div>
-</section>
 </section>
 
 </main>
