@@ -1,0 +1,338 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Homework 4\"\n",
+        "format: \n",
+        "    html:\n",
+        "        embed-resources: true\n",
+        "---\n",
+        "\n",
+        "\n",
+        "\n",
+        "__Due Date:__ 2024-11-13 at 8:30 AM PT\n",
+        "\n",
+        "---\n",
+        "\n",
+        "\n",
+        "__Name:__ Sabahat\n",
+        "\n",
+        "\n",
+        "## Preparation\n",
+        "\n",
+        "1. Download the [data file](https://github.com/gabehassler/PRGS-Intro-to-ML-2024/blob/main/data/processed/svi_covid.csv) from GitHub and place it in the _data/processed_ folder.\n",
+        "\n",
+        "#`Done`\n",
+        "\n",
+        "## Homework - Regression Trees\n",
+        "\n",
+        "The goal of this analysis is to use a regression tree to predict the number of per-capita COVID-19 deaths in each county in the US using the SVI variables.\n",
+        "\n",
+        "\n",
+        "#`importing extensions`"
+      ],
+      "id": "8f50cd43"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import pandas as pd\n",
+        "from sklearn.tree import DecisionTreeRegressor\n",
+        "from sklearn.metrics import mean_squared_error\n",
+        "from sklearn.model_selection import KFold\n",
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "from sklearn.tree import DecisionTreeRegressor, plot_tree"
+      ],
+      "id": "24a5d62a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "1. Load the data file.\n",
+        "#`loading data file`"
+      ],
+      "id": "485659c0"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "if __name__ == \"__main__\":\n",
+        " # Specify the file path as a string\n",
+        "\n",
+        "   file_path = \"C:/Users/sabahat/Desktop/ML-Folder/Sabahat-PRGS-Intro-to-ML-2024/data/processed/svi_covid.csv\"\n",
+        "# Function to load the data\n",
+        "def load_data(file_path):\n",
+        "    return pd.read_csv(file_path)"
+      ],
+      "id": "4785f311",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "2. Write the following functions:\n",
+        "    - A function that fits a regression tree to data. The function should take as input the data, the outcome variable, the predictor variables, and the maximum depth of the tree. The function should return the fitted tree.\n",
+        "    _Note: Many packages have functions that penalize the complexity of the tree to avoide overfitting. You should make sure that the function you write does not use any penalization for the complexity of the tree._\n",
+        "#`Function to fit a regression tree Initialize and fit the regression tree without complexity penalties.`.`"
+      ],
+      "id": "6a417f77"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "def fit_regression_tree(data, outcome_var, predictor_vars, max_depth=None):\n",
+        "    X = data[predictor_vars]\n",
+        "    y = data[outcome_var]\n",
+        "    tree = DecisionTreeRegressor(max_depth=max_depth)\n",
+        "    tree.fit(X, y)\n",
+        "    \n",
+        "    return tree"
+      ],
+      "id": "845a128c",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "```\n",
+        "\n",
+        "    - A function that predicts the outcome variable using a fitted tree. The function should take as input the fitted tree and the data for which to make predictions. The function should return the predicted values.\n",
+        "```\n",
+        "#`# Function to predict using a fitted tree.`"
+      ],
+      "id": "07254f6f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "def predict_with_tree(fitted_tree, data):\n",
+        "    return fitted_tree.predict(data)"
+      ],
+      "id": "da40d833",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "##- A function that calculates the mean squared error of the predictions. The function should take as input the predicted values and the true values. The function should return the mean squared error.\n",
+        "#`Function to calculate mean squared error`"
+      ],
+      "id": "09ac2481"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "def calculate_mse(predicted_values, true_values):\n",
+        "    return mean_squared_error(true_values, predicted_values)"
+      ],
+      "id": "9e360552",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "##3. Use 5-fold cross-validation to calculate the mean squared error of the regression tree for maximum tree depths 1, ..., 10.\n",
+        "The outcome variable is `total_deaths_per_100k` and the predictor variables are `EP_POV150, EP_UNEMP, EP_HBURD, EP_NOHSDP, EP_UNINSUR, EP_AGE65, EP_AGE17, EP_DISABL, EP_SNGPNT, EP_LIMENG, EP_MINRTY, EP_MUNIT, EP_MOBILE, EP_CROWD, EP_NOVEH, EP_GROUPQ, EP_NOINT`.\n",
+        "#`5-fold cross-validation and calculation of mean square erroe of the regression tree.`"
+      ],
+      "id": "fdf55b96"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Load the data\n",
+        "file_path = \"C:/Users/sabahat/Desktop/ML-Folder/Sabahat-PRGS-Intro-to-ML-2024/data/processed/svi_covid.csv\"\n",
+        "data = pd.read_csv(file_path)\n",
+        "outcome_var = \"total_deaths_per_100k\"\n",
+        "predictor_vars = [\"EP_POV150\", \"EP_UNEMP\", \"EP_HBURD\", \"EP_NOHSDP\", \"EP_UNINSUR\", \n",
+        "                  \"EP_AGE65\", \"EP_AGE17\", \"EP_DISABL\", \"EP_SNGPNT\", \"EP_LIMENG\", \n",
+        "                  \"EP_MINRTY\", \"EP_MUNIT\", \"EP_MOBILE\", \"EP_CROWD\", \"EP_NOVEH\", \n",
+        "                  \"EP_GROUPQ\", \"EP_NOINT\"]\n",
+        "\n",
+        "def cross_validate_tree(data, outcome_var, predictor_vars, max_depth_range):\n",
+        "    X = data[predictor_vars].values\n",
+        "    y = data[outcome_var].values\n",
+        "    kf = KFold(n_splits=5, shuffle=True, random_state=42)\n",
+        "    \n",
+        "    mse_scores = {depth: [] for depth in max_depth_range}\n",
+        "    \n",
+        "    for train_index, test_index in kf.split(X):\n",
+        "        X_train, X_test = X[train_index], X[test_index]\n",
+        "        y_train, y_test = y[train_index], y[test_index]\n",
+        "        \n",
+        "        for depth in max_depth_range:\n",
+        "            tree = DecisionTreeRegressor(max_depth=depth)\n",
+        "            tree.fit(X_train, y_train)\n",
+        "            predictions = tree.predict(X_test)\n",
+        "            mse = mean_squared_error(y_test, predictions)\n",
+        "            mse_scores[depth].append(mse)\n",
+        "    \n",
+        "    # Calculate the average MSE for each depth\n",
+        "    average_mse = {depth: np.mean(mse_scores[depth]) for depth in max_depth_range}\n",
+        "    \n",
+        "    # Ensure the function returns the calculated average MSE\n",
+        "    return average_mse\n",
+        "    max_depth_range = range(1, 11)\n",
+        "average_mse = cross_validate_tree(data, outcome_var, predictor_vars, max_depth_range)\n",
+        "\n",
+        "# Print the results\n",
+        "for depth, mse in average_mse.items():\n",
+        "    print(f\"Max Depth: {depth}, Average MSE: {mse:.4f}\")"
+      ],
+      "id": "7ffd52aa",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "4. Plot the mean squared error as a function of the maximum tree depth.\n",
+        "#`Plotting the results.`"
+      ],
+      "id": "ea105a21"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import matplotlib.pyplot as plt\n",
+        "# Plot the results\n",
+        "depths = list(average_mse.keys())\n",
+        "mse_values = list(average_mse.values())\n",
+        "\n",
+        "plt.figure(figsize=(10, 6))\n",
+        "plt.plot(depths, mse_values, marker='o', linestyle='-')\n",
+        "plt.title('Mean Squared Error vs. Maximum Tree Depth')\n",
+        "plt.xlabel('Maximum Tree Depth')\n",
+        "plt.ylabel('Mean Squared Error')\n",
+        "plt.xticks(depths)\n",
+        "plt.grid(True)\n",
+        "plt.show()"
+      ],
+      "id": "58dcc863",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "5. Which maximum tree depth would you choose based on the cross-validation results? Why?\n",
+        "#`Answer: The Plot pf the mean squared error as a function of the maximum tree depth suggests that MSE falls substantially till the point 3 and stabilizes between point 3 and 4. From point 5, the MSE tends to increase sharply and the addition of depth no longer reducing the MSE. This indicates that there is no accuracy improvement after point 4 and the higher maximum tree depth is led the model towards overfitting.`  \n",
+        "6. Fit a regression tree to the full data using the maximum tree depth you chose in the previous question.\n",
+        "#`Fitting regression tree to full data using the 4 as maximum tree depth`"
+      ],
+      "id": "d22af2db"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "x = data[predictor_vars]\n",
+        "y = data[outcome_var]\n",
+        "tree = DecisionTreeRegressor(max_depth=4)\n",
+        "tree.fit(x, y)\n",
+        "print(f\"Tree depth: {tree.get_depth()}\")\n",
+        "print(f\"Number of leaves: {tree.get_n_leaves()}\")"
+      ],
+      "id": "9c17f402",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "7. Plot the fitted tree. Summarize the tree in words. What variables seem to be the most important predictors of the number of per-capita COVID-19 deaths?\n",
+        "#`Plotting the tree.`"
+      ],
+      "id": "85456338"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import pandas as pd\n",
+        "from sklearn.tree import DecisionTreeRegressor, plot_tree\n",
+        "import matplotlib.pyplot as plt\n",
+        "plt.figure(figsize=(20, 10))\n",
+        "plot_tree(tree, feature_names=predictor_vars, filled=True, rounded=True)\n",
+        "plt.title('Regression Tree for Per-Capita COVID-19 Deaths')\n",
+        "plt.show()"
+      ],
+      "id": "82e15e87",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "#`Answer: As per the Regression Tree, the most important predictor of the number of per-capita COVID-19 deaths is the 'EP_NOINT', which is used for the first split. The other important variables are EP_DISABL, EP_POV150, and NP_NOHSDP which are used more oftenly compared to other variables.We can conclude that these variables are the most important predictors of 'per-capita COVID-19 deaths' in this dataset.`\n",
+        "\n",
+        "8. Plot the predicted values against the true values. How much would you trust the predictions of the regression tree? Why?"
+      ],
+      "id": "a3854345"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "predictions = tree.predict(x)\n",
+        "plt.figure(figsize=(10, 6))\n",
+        "plt.scatter(y, predictions, alpha=0.6)\n",
+        "plt.plot([y.min(), y.max()], [y.min(), y.max()], 'r--', lw=2)\n",
+        "plt.xlabel('True Values')\n",
+        "plt.ylabel('Predicted Values')\n",
+        "plt.title('Predicted vs. True Values')\n",
+        "plt.grid(True)\n",
+        "plt.show()\n",
+        "mse = mean_squared_error(y, predictions)\n",
+        "print(f\"Mean Squared Error on full data: {mse:.4f}\")"
+      ],
+      "id": "9853077a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "#`Answer: For small errors, the predicted values should be close to the true values, however, the wide spread of points away from red line suggests higher prediction errors. The significant deviation indicates that the model is not reliable to capture complex relationships.`"
+      ],
+      "id": "efd7291c"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "C:\\Users\\sabahat\\AppData\\Local\\Programs\\Python\\Python312\\share\\jupyter\\kernels\\python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
