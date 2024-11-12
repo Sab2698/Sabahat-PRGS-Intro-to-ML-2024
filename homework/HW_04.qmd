@@ -24,7 +24,7 @@ __Name:__ Sabahat
 The goal of this analysis is to use a regression tree to predict the number of per-capita COVID-19 deaths in each county in the US using the SVI variables.
 
 
-#`importing extensions`
+#importing extensions
 ```{python}
 import pandas as pd
 from sklearn.tree import DecisionTreeRegressor
@@ -36,7 +36,7 @@ from sklearn.tree import DecisionTreeRegressor, plot_tree
 ```
 
 1. Load the data file.
-#`loading data file`
+#loading data file
 ```{python}
 if __name__ == "__main__":
  # Specify the file path as a string
@@ -48,10 +48,11 @@ def load_data(file_path):
 
 ```
 
-2. Write the following functions:
-    - A function that fits a regression tree to data. The function should take as input the data, the outcome variable, the predictor variables, and the maximum depth of the tree. The function should return the fitted tree.
-    _Note: Many packages have functions that penalize the complexity of the tree to avoide overfitting. You should make sure that the function you write does not use any penalization for the complexity of the tree._
-#`Function to fit a regression tree Initialize and fit the regression tree without complexity penalties.`.`
+#2. Write the following functions:
+#A function that fits a regression tree to data. The function should take as input the data, the outcome variable, the predictor variables, and the maximum depth of the tree. The function should return the fitted tree.
+_Note: Many packages have functions that penalize the complexity of the tree to avoide overfitting. You should make sure that the function you write does not use any penalization for the complexity of the tree._
+
+#Function to fit a regression tree Initialize and fit the regression tree without complexity penalties.
 ```{python}
 def fit_regression_tree(data, outcome_var, predictor_vars, max_depth=None):
     X = data[predictor_vars]
@@ -61,12 +62,9 @@ def fit_regression_tree(data, outcome_var, predictor_vars, max_depth=None):
     
     return tree
 ```
+#A function that predicts the outcome variable using a fitted tree. The function should take as input the fitted tree and the data for which to make predictions. The function should return the predicted values.
 
-```
-
-    - A function that predicts the outcome variable using a fitted tree. The function should take as input the fitted tree and the data for which to make predictions. The function should return the predicted values.
-```
-#`# Function to predict using a fitted tree.`
+Function to predict using a fitted tree.
 ```{python}
 
 def predict_with_tree(fitted_tree, data):
@@ -74,7 +72,7 @@ def predict_with_tree(fitted_tree, data):
 ```
 
 ##- A function that calculates the mean squared error of the predictions. The function should take as input the predicted values and the true values. The function should return the mean squared error.
-#`Function to calculate mean squared error`
+#Function to calculate mean squared error
 ```{python}
 def calculate_mse(predicted_values, true_values):
     return mean_squared_error(true_values, predicted_values)
@@ -82,7 +80,7 @@ def calculate_mse(predicted_values, true_values):
 
 ##3. Use 5-fold cross-validation to calculate the mean squared error of the regression tree for maximum tree depths 1, ..., 10.
 The outcome variable is `total_deaths_per_100k` and the predictor variables are `EP_POV150, EP_UNEMP, EP_HBURD, EP_NOHSDP, EP_UNINSUR, EP_AGE65, EP_AGE17, EP_DISABL, EP_SNGPNT, EP_LIMENG, EP_MINRTY, EP_MUNIT, EP_MOBILE, EP_CROWD, EP_NOVEH, EP_GROUPQ, EP_NOINT`.
-#`5-fold cross-validation and calculation of mean square erroe of the regression tree.`
+#5-fold cross-validation and calculation of mean square erroe of the regression tree.
 
 ```{python}
 # Load the data
@@ -114,10 +112,9 @@ def cross_validate_tree(data, outcome_var, predictor_vars, max_depth_range):
     
     # Calculate the average MSE for each depth
     average_mse = {depth: np.mean(mse_scores[depth]) for depth in max_depth_range}
-    
-    # Ensure the function returns the calculated average MSE
     return average_mse
-    max_depth_range = range(1, 11)
+
+max_depth_range = range(1, 11)
 average_mse = cross_validate_tree(data, outcome_var, predictor_vars, max_depth_range)
 
 # Print the results
@@ -126,7 +123,7 @@ for depth, mse in average_mse.items():
 ```
 
 4. Plot the mean squared error as a function of the maximum tree depth.
-#`Plotting the results.`
+#Plotting the results.
 ```{python}
 import matplotlib.pyplot as plt
 # Plot the results
@@ -144,9 +141,11 @@ plt.show()
 ```
 
 5. Which maximum tree depth would you choose based on the cross-validation results? Why?
-#`Answer: The Plot pf the mean squared error as a function of the maximum tree depth suggests that MSE falls substantially till the point 3 and stabilizes between point 3 and 4. From point 5, the MSE tends to increase sharply and the addition of depth no longer reducing the MSE. This indicates that there is no accuracy improvement after point 4 and the higher maximum tree depth is led the model towards overfitting.`  
-6. Fit a regression tree to the full data using the maximum tree depth you chose in the previous question.
-#`Fitting regression tree to full data using the 4 as maximum tree depth`
+Answer:The Plot pf the mean squared error as a function of the maximum tree depth suggests that MSE falls substantially till the point 3 and stabilizes between point 3 and 4. From point 5, the MSE tends to increase sharply and the addition of depth no longer reducing the MSE. This indicates that there is no accuracy improvement after point 4 and the higher maximum tree depth is led the model towards overfitting.
+
+#6. Fit a regression tree to the full data using the maximum tree depth you chose in the previous question.
+
+#Fitting regression tree to full data using the 4 as maximum tree depth
 ```{python}
 x = data[predictor_vars]
 y = data[outcome_var]
@@ -157,7 +156,7 @@ print(f"Number of leaves: {tree.get_n_leaves()}")
 ```
 
 7. Plot the fitted tree. Summarize the tree in words. What variables seem to be the most important predictors of the number of per-capita COVID-19 deaths?
-#`Plotting the tree.`
+#Plotting the tree
 ```{python}
 import pandas as pd
 from sklearn.tree import DecisionTreeRegressor, plot_tree
@@ -167,7 +166,7 @@ plot_tree(tree, feature_names=predictor_vars, filled=True, rounded=True)
 plt.title('Regression Tree for Per-Capita COVID-19 Deaths')
 plt.show()
 ```
-#`Answer: As per the Regression Tree, the most important predictor of the number of per-capita COVID-19 deaths is the 'EP_NOINT', which is used for the first split. The other important variables are EP_DISABL, EP_POV150, and NP_NOHSDP which are used more oftenly compared to other variables.We can conclude that these variables are the most important predictors of 'per-capita COVID-19 deaths' in this dataset.`
+#Answer: As per the Regression Tree, the most important predictor of the number of per-capita COVID-19 deaths is the 'EP_NOINT', which is used for the first split. The other important variables are EP_DISABL, EP_POV150, and NP_NOHSDP which are used more oftenly compared to other variables.We can conclude that these variables are the most important predictors of 'per-capita COVID-19 deaths' in this dataset.
 
 8. Plot the predicted values against the true values. How much would you trust the predictions of the regression tree? Why?
 ```{python}
@@ -183,4 +182,4 @@ plt.show()
 mse = mean_squared_error(y, predictions)
 print(f"Mean Squared Error on full data: {mse:.4f}")
 ```
-#`Answer: For small errors, the predicted values should be close to the true values, however, the wide spread of points away from red line suggests higher prediction errors. The significant deviation indicates that the model is not reliable to capture complex relationships.`
+#Answer: For small errors, the predicted values should be close to the true values, however, the wide spread of points away from red line suggests higher prediction errors. The significant deviation indicates that the model is not reliable to capture complex relationships.
