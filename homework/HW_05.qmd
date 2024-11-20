@@ -39,11 +39,11 @@ import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
-```
+````
 
 
-1. Use a simple neural network to predict the number of per-capita COVID-19 deaths in each county in the US using the SVI variables.
-The outcome variable is `total_deaths_per_100k` and the predictor variables are `EP_POV150, EP_UNEMP, EP_HBURD, EP_NOHSDP, EP_UNINSUR, EP_AGE65, EP_AGE17, EP_DISABL, EP_SNGPNT, EP_LIMENG, EP_MINRTY, EP_MUNIT, EP_MOBILE, EP_CROWD, EP_NOVEH, EP_GROUPQ, EP_NOINT`.
+##a1. Use a simple neural network to predict the number of per-capita COVID-19 deaths in each county in the US using the SVI variables.
+The outcome variable is`total_deaths_per_100k` and the predictor variables are `EP_POV150, EP_UNEMP, EP_HBURD, EP_NOHSDP, EP_UNINSUR, EP_AGE65, EP_AGE17, EP_DISABL, EP_SNGPNT, EP_LIMENG, EP_MINRTY, EP_MUNIT, EP_MOBILE, EP_CROWD, EP_NOVEH, EP_GROUPQ, EP_NOINT`.
 The neural network should have one hidden layer with 10 nodes and use the ReLU activation function.
 ##loading data file
 ```{python}
@@ -114,7 +114,7 @@ with torch.no_grad():
 y_pred = y_pred_tensor.numpy()
 
 
-```
+````
 
 Plot the predicted values against the true values.
 ##Plotting the Predicted vs True Values
@@ -126,7 +126,7 @@ plt.xlabel('True Values')
 plt.ylabel('Predicted Values')
 plt.title('Predicted vs True Values')
 plt.show()
-```
+````
 
 ##What is the mean squared error of the 
 predictions in the test set?
@@ -134,11 +134,12 @@ predictions in the test set?
 ```{python}
 mse = mean_squared_error(y_test, y_pred)
 print(f'Mean Squared Error: {mse}')
-```
+````
+
 #Answer: Mean Squared Error is 18470.668
 
 
-2. Repeat the analysis from the previous question, but this time use a more complicated neural network with more hidden layers and/or more nodes in the hidden layers.
+##2. Repeat the analysis from the previous question, but this time use a more complicated neural network with more hidden layers and/or more nodes in the hidden layers.
 You should experiment with different architectures and activation functions to see what works best.
 ```{python}
 # Define predictor and outcome variables
@@ -186,14 +187,18 @@ plt.xlabel('True Values')
 plt.ylabel('Predicted Values')
 plt.title('Predicted vs True Values')
 plt.show()
-```
+````
 
 #What is the mean squared error of the predictions in the test set?
+
 #Answer: The mean squared error of the prediction in this test set is 18340.5597
 
 
 3. Compare the predictions of the neural network in Question 2 to the predictions of the regression tree from the previous assignment. Which model would you use to predict the number of per-capita COVID-19 deaths? Why?
+
 #Answer: When comapred the neural network results with the predictions of the regression tree from last assignment, it appears that the mse is lower in both models in neural netwrok compared with regression tree. So we can use the neural network to predict the number of per-capita COVID-19 deaths.
+
 #Which model would you use to understand the relationship between the SVI variables and the number of per-capita COVID-19 deaths? Why?
-To understand the relationship, between SVI  variables and the number of per-capita COVID-19 deaths the regression is more easier  approach compared to neural network, since the regression tree provides the visual representaion of decision rules. The neural network approach seems a black box since it does not provide any kind of explaination about how the  varibales are related with each other.
+
+##Answer:To understand the relationship, between SVI  variables and the number of per-capita COVID-19 deaths the regression is more easier  approach compared to neural network, since the regression tree provides the visual representaion of decision rules. The neural network approach seems a black box since it does not provide any kind of explaination about how the  varibales are related with each other.
 # Disclaimer: I used the Chat GPT to generate codes
