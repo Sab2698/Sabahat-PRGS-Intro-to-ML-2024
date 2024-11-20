@@ -183,3 +183,5 @@ mse = mean_squared_error(y, predictions)
 print(f"Mean Squared Error on full data: {mse:.4f}")
 ```
 #Answer: For small errors, the predicted values should be close to the true values, however, the wide spread of points away from red line suggests higher prediction errors. The significant deviation indicates that the model is not reliable to capture complex relationships.
+
+# Disclaimer: I used the Chat GPT to generate codes
