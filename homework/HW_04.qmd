@@ -145,11 +145,11 @@ Answer:The Plot pf the mean squared error as a function of the maximum tree dept
 
 #6. Fit a regression tree to the full data using the maximum tree depth you chose in the previous question.
 
-#Fitting regression tree to full data using the 4 as maximum tree depth
+#Fitting regression tree to full data using the 3 as maximum tree depth
 ```{python}
 x = data[predictor_vars]
 y = data[outcome_var]
-tree = DecisionTreeRegressor(max_depth=4)
+tree = DecisionTreeRegressor(max_depth=3)
 tree.fit(x, y)
 print(f"Tree depth: {tree.get_depth()}")
 print(f"Number of leaves: {tree.get_n_leaves()}")

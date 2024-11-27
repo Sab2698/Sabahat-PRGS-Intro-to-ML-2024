@@ -1,0 +1,149 @@
+---
+title: "Untitled"
+format: html
+---
+import pandas as pd
+
+def load_data(file_path):
+    return pd.read_csv(file_path)
+```{python}
+import pandas as pd
+
+if __name__ == "__main__":
+    # Specify the file path as a string
+    file_path = "C:/Users/sabahat/Desktop/ML-Folder/Sabahat-PRGS-Intro-to-ML-2024/data/raw/Entities.csv"
+    
+    # Debugging: Print the file path
+    print(f"Attempting to load file from: {file_path}")
+
+    
+    # Load the data into a DataFrame directly
+    try:
+        df = pd.read_csv(file_path)
+        
+        # Check if the 'entity' column exists
+        if 'entity' in df.columns:
+            # Count occurrences of each entity
+            entity_count = df['entity'].value_counts()
+            
+            # Display the counts
+            print(entity_count)
+        else:
+            print("Column 'entity' not found in the DataFrame.")
+    except FileNotFoundError:
+        print(f"File not found: {file_path}")
+    except pd.errors.EmptyDataError:
+        print("No data: The file is empty.")
+    except Exception as e:
+        print(f"An error occurred while reading the file: {e}")
+        # Adjust display settings
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+# Convert to DataFrame
+entity_count_df = entity_count.reset_index()
+
+# Rename columns for clarity
+entity_count_df.columns = ['Entity', 'Frequency']
+
+# Display the DataFrame
+print(entity_count_df)
+# Print the full results
+print(entity_count)
+```
+```{python}
+# Sample data
+data = {
+    'entity': [
+        'QTIP trusts', 'Qualified ABLE program', 'Qualified affiliate', 
+        'Qualified amateur sports organization', 'Qualified and licensed actuary',
+        'Qualified appraisal', 'Qualified appraiser ]', 'qualified blood collector organization',
+        'Qualified blood collector organization', 'Qualified blood collector organization ]',
+        'Qualified board or exchange', 'Qualified borrower', 'qualified business ]',
+        'Qualified business entity District of Columbia Enterprise Zone', 'Qualified business unit',
+        'qualified business unit', 'Qualified business unit ]', 'Qualified business units',
+        'Qualified buyer', 'Qualified C corporation', 'Qualified chain member', 
+        'Qualified charitable remainder trust', 'Qualified Collective Investment Vehicle',
+        'Qualified continuing care facility', 'Qualified cooperative housing corporation',
+        'Qualified corporate partner', 'Qualified corporation', 'Qualified current retiree liabilities ]',
+        'Qualified electing fund', 'Qualified Electing Fund', 'Qualified electric utility',
+        'Qualified employee', 'Qualified employee-owner', 'Qualified employer', 'Qualified entity',
+        'Qualified farmer or rancher', 'Qualified farming trade or business', 
+        'Qualified farm-related taxpayer', 'Qualified film and television productions',
+        'Qualified film or television production', 'qualified film or television production',
+        'Qualified financial institution', 'Qualified foreign corporation', 
+        'Qualified foreign pension fund', 'Qualified former foster youth', 'Qualified foster individual',
+        'Qualified fund', 'Qualified heir', 'Qualified homeless youth', 'qualified housing issue',
+        'Qualified incidental activities', 'Qualified Indian entity', 'Qualified Indian entity ]',
+        'Qualified Indian lands', 'Qualified Indian tribe ]', 'Qualified Individual',
+        'Qualified individual', 'Qualified insurance branch', 'Qualified interest', 
+        'Qualified intermediary ]', 'Qualified investment entity', 'qualified investment entity',
+        'qualified joint and survivor annuity', 'Qualified leasing group', 'Qualified leasing member',
+        'Qualified liquidation', 'Qualified live theatrical production', 'qualified live theatrical production ]',
+        'Qualified live theatrical productions ]', 'Qualified long-term care services',
+        'Qualified low-income community', 'Qualified manufacturer', 
+        'Qualified manufacturer of tobacco products', 'qualified minority shareholder',
+        'Qualified mortgage insurance', 'qualified mortgage issue', 'Qualified nonprofit organization',
+        'Qualified opportunity fund', 'Qualified opportunity zone business ]',
+        'Qualified opportunity zone business property', 'Qualified opportunity zone partnership interest',
+        'Qualified opportunity zone property', 'Qualified opportunity zone stock', 'Qualified organization',
+        'Qualified Organization', 'qualified participant', 'Qualified partnership', 'Qualified performing artist',
+        'Qualified person', 'Qualified personal service corporation', 'Qualified pole rentals',
+        'Qualified Publicly Traded Partnership', 'Qualified publicly traded partnership (Section 851(h)) ]',
+        'Qualified real estate agent', 'Qualified real property', 'Qualified refiner or processor',
+        'Qualified reformation', 'Qualified REIT subsidiary', 'Qualified REIT subsidiary ]',
+        'Qualified reserve fund', 'Qualified residence', 'Qualified resident', 
+        'qualified residential rental projects', 'Qualified return preparation program',
+        'qualified return preparation program', 'Qualified return preparation program ]',
+        'Qualified return preparation programs', 'Qualified revocable trust', 'Qualified securities',
+        'Qualified Shareholder', 'Qualified small business', 'Qualified small issuer',
+        'Qualified solid waste disposal facility', 'Qualified State or local political organization',
+        'Qualified Subchapter S Subsidiary', 'Qualified subchapter S subsidiary',
+        'Qualified subchapter S trust', 'Qualified Substitute', 'Qualified substitute ]',
+        'Qualified tax-exempt organizations', 'Qualified taxpayer', 'Qualified trade or business',
+        'Qualified transfer', 'Qualified Trust', 'Qualified trust', 'Qualified tuition programs',
+        'Qualified veteran', 'Qualified veterans', 'Qualified volunteer fire department',
+        'Qualified zone employee', 'qualified zone property', 'Qualified zone property',
+        'Qualifying business', 'Qualifying child', 'Qualifying Child', 'Qualifying children',
+        'qualifying children', 'Qualifying distribution', 'qualifying distribution',
+        'Qualifying family member', 'Qualifying family members', 'Qualifying Individual',
+        'Qualifying individual', 'Qualifying insurance company', 'Qualifying insurance company branch',
+        'qualifying insurance corporation', 'Qualifying insurance corporation', 
+        'Qualifying lending and finance business', 
+        'Qualifying organization (as described in subparagraph (C) for convention and trade show activities)',
+        'Qualifying organization (as described in subparagraph (C) for public entertainment activities)',
+        'Qualifying partnership', 'Qualifying Relative', 'Qualifying vessel operator',
+        'qualifying vessel operator', 'Qualifying vessel operators ]'
+    ],
+    'count': [
+        1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 5, 2, 1, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 10, 2, 1, 1, 1, 1, 1, 1, 1,
+        1, 3, 1, 1, 3, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 5, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+    ]
+}
+
+df = pd.DataFrame(data)
+
+def normalize_entity(entity):
+    # Convert to lowercase
+    entity = entity.lower()
+    # Remove text within brackets
+    entity = re.sub(r'\s*\[.*?\]\s*', '', entity)
+    # Handle plurals by simple stemming (remove trailing 's' if it exists)
+    if entity.endswith('s'):
+        entity = entity[:-1]
+    return entity.strip()
+
+# Apply normalization function to the 'entity' column
+df['normalized_entity'] = df['entity'].apply(normalize_entity)
+
+# Group by the normalized entity and sum the counts
+aggregated_df = df.groupby('normalized_entity')['count'].sum().reset_index()
+
+# Rename columns for clarity
+aggregated_df.columns = ['Entity', 'Frequency']
+
+# Display the DataFrame
+print(aggregated_df)
