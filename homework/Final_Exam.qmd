@@ -1,0 +1,54 @@
+---
+title: "Homework 4"
+format: 
+    html:
+        embed-resources: true
+        #importing extensions
+        __Name:__ Sabahat
+
+
+## Preparation
+
+
+```{python}
+import pandas as pd
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import KFold
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.tree import DecisionTreeRegressor, plot_tree
+```
+
+1. Load the data file.
+#loading data file
+```{python}
+if __name__ == "__main__":
+ # Specify the file path as a string
+
+   file_path = "C:/Users/sabahat/Desktop/ML-Folder/Sabahat-PRGS-Intro-to-ML-2024/data/raw/Inequality_data_for_final.csv"
+  
+# Function to load the data
+def load_data(file_path):
+    return pd.read_csv(file_path)
+```
+```{python}
+df = pd.read_csv(file_path)
+summary = df.describe()
+print(summary)
+# Initial count of observations
+initial_count = df.shape[0]
+
+# Remove rows with any missing values
+df_cleaned = df.dropna()
+
+# Final count of observations
+cleaned_count = df_cleaned.shape[0]
+
+# Calculate the number of removed observations
+removed_observations = initial_count - cleaned_count
+
+print(f"Number of observations removed: {removed_observations}")
+
+
+```
